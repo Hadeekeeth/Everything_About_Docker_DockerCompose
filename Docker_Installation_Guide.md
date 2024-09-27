@@ -1,4 +1,4 @@
-# Docker Installation On Ubuntu Linux (Latest Version)
+# Docker & Docker Compose Installation On Ubuntu Linux (Latest Version)
 
 ## Step 1: Uninstall Old Versions or conflicting packages
 If you have any old versions of Docker installed, remove them using this command:
