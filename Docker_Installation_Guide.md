@@ -1,10 +1,19 @@
-# Docker and Docker Compose Installation (Latest Version)
+# Docker Installation On Ubuntu Linux (Latest Version)
 
-## Step 1: Uninstall Old Versions of Docker
+## Step 1: Uninstall Old Versions or conflicting packages
 If you have any old versions of Docker installed, remove them using this command:
 
 ```bash
-sudo apt-get remove docker docker-engine docker.io containerd runc
+for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+```
+Also makesure Docker Engine Uninstalled
+```bash
+sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+```
+Images, containers, volumes, or custom configuration files on your host aren't automatically removed. To delete all images, containers, and volumes:
+```bash
+sudo rm -rf /var/lib/docker
+sudo rm -rf /var/lib/containerd
 ```
 
 ## Step 2: Update Package Index and Install Dependencies
