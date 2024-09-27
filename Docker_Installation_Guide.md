@@ -18,55 +18,46 @@ sudo rm -rf /var/lib/containerd
 
 ## Step 2: Update Package Index and Install Dependencies
 
-Update your system's package index and install the necessary dependencies for Docker:
+Before you install Docker Engine for the first time on a new host machine, you need to set up the Docker repository. Afterward, you can install and update Docker from the repository.
 
 ```bash
+# Add Docker's official GPG key:
 sudo apt-get update
-sudo apt-get install -y ca-certificates curl gnupg lsb-release
-```
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
 
-## Step 3: Add Docker’s Official GPG Key
-
-To ensure secure installation from Docker's official repository, add the Docker GPG key:
-
-```bash
-sudo mkdir -m 0755 -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-```
-
-## Step 4: Set Up Docker’s Stable Repository
-
-Add Docker’s stable repository to your system’s apt sources list:
-
-```bash
+# Add the repository to Apt sources:
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-```
-
-## Step 5: Install Docker Engine
-
-Update the package index again and install the latest version of Docker Engine and related components:
-
-```bash
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-## Step 6: Verify Docker Installation
-Check if Docker is installed correctly by verifying the version:
+## Step 3: Install the Docker packages
+
+Latest Version
 
 ```bash
-sudo docker --version
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
-## Step 7: Manage Docker as a Non-Root User (Optional)
+Specific Version
 ```bash
-sudo usermod -aG docker $USER
-```
+# List the available versions:
+apt-cache madison docker-ce | awk '{ print $3 }'
 
-## Step 8: Test Docker Installation
-Run the following command to confirm Docker is working by running a test container:
+Select the desired version and install:
+
+VERSION_STRING=5:27.1.1-1~ubuntu.24.04~noble
+sudo apt-get install docker-ce=$VERSION_STRING docker-ce-cli=$VERSION_STRING containerd.io docker-buildx-plugin docker-compose-plugin
+...
+
+## Step 4: Verify that the Docker Engine installation is successful by running the hello-world image.
+
+
 ```bash
 sudo docker run hello-world
 ```
